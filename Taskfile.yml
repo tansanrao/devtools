@@ -1,0 +1,8 @@
+version: '3'
+
+includes:
+  docker: ./.taskfiles/docker
+  qemu: ./.taskfiles/qemu
+
+tasks:
+  default: task --list-all

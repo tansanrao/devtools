@@ -1,0 +1,39 @@
+version: '3'
+
+vars:
+  HOST_UID:
+    sh: id -u
+  HOST_GID:
+    sh: id -g
+  HOST_USER:
+    sh: whoami
+  WORKSPACE: '/home/{{ .HOST_USER }}/workspace'
+
+tasks:
+  build-image:
+    desc: "Build docker image for a container"
+    summary: |
+      Args:
+        image: Name of the docker image being built (required, must match directory name under docker)
+    dir: './docker/{{.image}}'
+    requires:
+      vars: ["image"]
+    cmd: |
+      docker build --build-arg UID={{.HOST_UID}} \
+      --build-arg GID={{.HOST_GID}} \
+      --build-arg USER={{.HOST_USER}}  \
+      -t {{.image}} .
+
+  start:
+    desc: "Start docker compose for a container"
+    summary: |
+      Args:
+        image: Name of the docker image (required, must match directory name under docker)
+    dir: './docker/{{.image}}'
+    requires:
+      vars: ["image"]
+    cmds:
+      - docker compose up -d
+    env:
+      WORKSPACE: '{{.WORKSPACE}}'
+      HOST_USER: '{{.HOST_USER}}'

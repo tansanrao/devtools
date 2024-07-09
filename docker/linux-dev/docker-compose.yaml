@@ -1,0 +1,12 @@
+services:
+  linux-dev:
+    image: linux-dev
+    container_name: linux-dev
+    privileged: true
+    environment:
+      SSH_AUTH_SOCK: ~/.ssh/ssh_auth_sock
+    volumes:
+      - /dev/kvm:/dev/kvm
+      - /dev/net/tun:/dev/net/tun
+      - /home/${HOST_USER}/.ssh/ssh_auth_sock:/home/${HOST_USER}/.ssh/ssh_auth_sock
+      - ${WORKSPACE}:/home/${HOST_USER}/workspace
