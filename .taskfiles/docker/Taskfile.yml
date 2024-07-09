@@ -37,3 +37,30 @@ tasks:
     env:
       WORKSPACE: '{{.WORKSPACE}}'
       HOST_USER: '{{.HOST_USER}}'
+
+  stop:
+    desc: "Stop docker compose for a container"
+    summary: |
+      Args:
+        image: Name of the docker image (required, must match directory name under docker)
+    dir: './docker/{{.image}}'
+    requires:
+      vars: ["image"]
+    cmds:
+      - docker compose down
+    env:
+      WORKSPACE: '{{.WORKSPACE}}'
+      HOST_USER: '{{.HOST_USER}}'
+
+  restart:
+    desc: "Restart docker compose for a container"
+    summary: |
+      Args:
+        image: Name of the docker image (required, must match directory name under docker)
+    cmds:
+      - task: stop
+        vars:
+          image: '{{.image}}'
+      - task: start
+        vars: 
+          image: '{{.image}}'
